@@ -8,6 +8,9 @@
 # IAR Workspace files
 *.eww
 
+# Object files
+*.o
+
 # IAR Settings
 **/settings/*.crun
 **/settings/*.dbgdt

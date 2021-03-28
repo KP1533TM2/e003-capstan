@@ -41,6 +41,9 @@ DEFINE_PORT_CLASS(PORTF, DDRF, PINF, PORT_F)
 #ifdef PORTG0
 DEFINE_PORT_CLASS(PORTG, DDRG, PING, PORT_G)
 #endif
+#ifdef PORTL0
+DEFINE_PORT_CLASS(PORTL, DDRL, PINL, PORT_L)
+#endif
 
 //----------------------------- Номера пинов: --------------------------------
 

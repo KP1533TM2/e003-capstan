@@ -24,9 +24,9 @@ typedef struct
 //------------------------------ Класс TDpll: --------------------------------
 //----------------------------------------------------------------------------
 
-#pragma vector = TIMER1_CAPT_vect
+#pragma vector = TIMER4_CAPT_vect
 extern "C" __interrupt void Capture(void);
-#pragma vector = TIMER1_COMPA_vect
+#pragma vector = TIMER4_COMPA_vect
 extern "C" __interrupt void Compare(void);
 
 class TDpll

@@ -105,10 +105,10 @@ TDpll::TDpll(void)
   Pin_Tacho.DirIn(PIN_PULL);
   Pwm = new TPwm();
   //timer 1 mode: CTC, TOP = OCR1A, CK/1:
-  TCCR1B = (1 << WGM12) | (1 << CS10);
+  TCCR4B = (1 << WGM42) | (1 << CS40);
   //IC1 and OC1A interrupts enable:
-  TIFR1 = (1 << ICF1) | (1 << OCF1A);
-  TIMSK1 |= (1 << ICIE1) | (1 << OCIE1A);
+  TIFR4 = (1 << ICF4) | (1 << OCF4A);
+  TIMSK4 |= (1 << ICIE4) | (1 << OCIE4A);
   SetSpeed(NOM_V[PRE2]);
 
   vCapV = 0; preCapV = 0;
@@ -141,11 +141,11 @@ uint8_t  TDpll::vOvfC;
 uint16_t TDpll::HPeriod;
 int8_t   TDpll::vPfdState;
 
-#pragma vector = TIMER1_CAPT_vect
+#pragma vector = TIMER4_CAPT_vect
 __interrupt void Capture(void)
 {
   //сохранение захваченного значения фазы:
-  TDpll::vCapV = ICR1;
+  TDpll::vCapV = ICR4;
   //обновление состояния фазового детектора:
   TDpll::vPfdState++;
   //счет событий захвата таймера:
@@ -153,7 +153,7 @@ __interrupt void Capture(void)
   //сохранение количества переполнений таймера:
   TDpll::vOvfN = TDpll::vOvfC;
   //коррекция, если переполнение было до захвата таймера:
-  if((HI(TDpll::vCapV) < HI(TDpll::HPeriod)) && (TIFR1 & (1 << OCF1A)))
+  if((HI(TDpll::vCapV) < HI(TDpll::HPeriod)) && (TIFR4 & (1 << OCF4A)))
     TDpll::vOvfN++;
 }
 
@@ -162,7 +162,7 @@ __interrupt void Capture(void)
 uint16_t TDpll::vPhase;
 bool TDpll::vPfdUpd;
 
-#pragma vector = TIMER1_COMPA_vect
+#pragma vector = TIMER4_COMPA_vect
 __interrupt void Compare(void)
 {
   //счет переполнений таймера:
@@ -170,7 +170,7 @@ __interrupt void Compare(void)
   //вычисление ошибки фазы:
   TDpll::vPfdState--;
   if(TDpll::vPfdState == 0) TDpll::vPhase = TDpll::vCapV;
-    else if(TDpll::vPfdState < 0) { TDpll::vPhase = OCR1A; TDpll::vPfdState = -1; }
+    else if(TDpll::vPfdState < 0) { TDpll::vPhase = OCR4A; TDpll::vPfdState = -1; }
       else { TDpll::vPhase = 0; TDpll::vPfdState = 1; }
   TDpll::vPfdUpd = 1;
 }
@@ -297,7 +297,7 @@ void TDpll::SetSpeed(uint16_t speed)
   Period = F_CLK * 10 / speed;
   Speed = speed;
   HPeriod = Period / 2;
-  OCR1A = Period - 1;
+  OCR4A = Period - 1;
 }
 
 //-------------------------- Чтение скорости: --------------------------------

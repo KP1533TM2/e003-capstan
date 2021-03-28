@@ -123,7 +123,7 @@
         </option>
         <option>
           <name>GGEepromUtilSize</name>
-          <state>512</state>
+          <state>4096</state>
         </option>
         <option>
           <name>GRuntimeLibSelect</name>
@@ -217,7 +217,7 @@
         </option>
         <option>
           <name>GenDeviceSelectMenu</name>
-          <state>m88pa	ATmega88PA</state>
+          <state>m2560	ATmega2560</state>
         </option>
       </data>
     </settings>
