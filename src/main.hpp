@@ -25,17 +25,8 @@
 
 typedef TGpio<PORT_L, PIN_0> Pin_Tacho_t; //PL0 (ICP4) - Tacho in [control]
 typedef TGpio<PORT_B, PIN_1> Pin_Lock_t;  //PB1 - Lock out [control]
-typedef TGpio<PORT_B, PIN_2> Pin_Led_t;   //PB2 - LED out [control]
+typedef TGpio<PORT_B, PIN_7> Pin_Led_t;   //PB7 - LED out [control]
 typedef TGpio<PORT_B, PIN_4> Pin_Pwm_t;   //PB4 (OC2A) - PWM out [pwm]
-typedef TGpio<PORT_B, PIN_3> Pin_PB4_t;   //PB3 - not used [control]
-typedef TGpio<PORT_B, PIN_5> Pin_PB5_t;   //PB5 - not used [control]
-
-typedef TGpio<PORT_C, PIN_0> Pin_PC0_t;   //PC0 - not used [control]
-typedef TGpio<PORT_C, PIN_1> Pin_PC1_t;   //PC1 - not used [control]
-typedef TGpio<PORT_C, PIN_2> Pin_PC2_t;   //PC2 - not used [control]
-typedef TGpio<PORT_C, PIN_3> Pin_PC3_t;   //PC3 - not used [control]
-typedef TGpio<PORT_C, PIN_4> Pin_PC4_t;   //PC4 - not used [control]
-typedef TGpio<PORT_C, PIN_5> Pin_PC5_t;   //PC5 - not used [control]
 
 typedef TGpio<PORT_E, PIN_0> Pin_RXD_t;   //PD0 (RXD) - RXD [wakeport]
 typedef TGpio<PORT_E, PIN_1> Pin_TXD_t;   //PD1 (TXD) - TXD [wakeport]

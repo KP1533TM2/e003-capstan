@@ -59,16 +59,6 @@ inline void TControl::HardwareInit(void)
   Pin_Lock.DirOut();
   Pin_Led.DirOut();
 
-  //неиспользуемые пины:
-  Pin_PB4.DirIn(PIN_PULL);
-  Pin_PB5.DirIn(PIN_PULL);
-  Pin_PC0.DirIn(PIN_PULL);
-  Pin_PC1.DirIn(PIN_PULL);
-  Pin_PC2.DirIn(PIN_PULL);
-  Pin_PC3.DirIn(PIN_PULL);
-  Pin_PC4.DirIn(PIN_PULL);
-  Pin_PC5.DirIn(PIN_PULL);
-
   //настройка watchdog-таймера:
   __watchdog_reset();
   WDTCSR |= (1 << WDCE) | (1 << WDE); //разрешение watchdog-таймера

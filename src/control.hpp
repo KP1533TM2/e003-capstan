@@ -47,16 +47,6 @@ private:
   Pin_Lock_t Pin_Lock;
   Pin_Led_t Pin_Led;
 
-  //неиспользуемые пины:
-  Pin_PB4_t Pin_PB4;
-  Pin_PB5_t Pin_PB5;
-  Pin_PC0_t Pin_PC0;
-  Pin_PC1_t Pin_PC1;
-  Pin_PC2_t Pin_PC2;
-  Pin_PC3_t Pin_PC3;
-  Pin_PC4_t Pin_PC4;
-  Pin_PC5_t Pin_PC5;
-
   TDpll *Dpll;
   uint8_t Preset;            //номер текущего пресета скорости
   bool Run;                  //состояние (вкл./выкл.)
