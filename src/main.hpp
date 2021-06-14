@@ -23,19 +23,23 @@
 
 //-------------- Использование выводов процессора [module]: ------------------
 
-typedef TGpio<PORT_L, PIN_0> Pin_Tacho_t; //PL0 (ICP4) - Tacho in [control]
-typedef TGpio<PORT_B, PIN_1> Pin_Lock_t;  //PB1 - Lock out [control]
-typedef TGpio<PORT_B, PIN_7> Pin_Led_t;   //PB7 - LED out [control]
-typedef TGpio<PORT_B, PIN_4> Pin_Pwm_t;   //PB4 (OC2A) - PWM out [pwm]
+typedef TGpio<PORT_C, PIN_1> Pin_Led_t;   //PC1 - LED out [control]
+typedef TGpio<PORT_D, PIN_2> Pin_Relay_t; //PD2 - Reverse relay
+typedef TGpio<PORT_C, PIN_3> Pin_Fref_t;  //PC3 - Fref out (oscilloscope) (normally PC3)
+typedef TGpio<PORT_C, PIN_4> Pin_Debug_t; //PC4 - Oscilloscope debug out
+typedef TGpio<PORT_B, PIN_1> Pin_Dir_t;   //PB1 - Reverse [control]
+typedef TGpio<PORT_B, PIN_2> Pin_Spd1_t;  //PB2 - Speed 1 [control], 9/19
 
-typedef TGpio<PORT_E, PIN_0> Pin_RXD_t;   //PD0 (RXD) - RXD [wakeport]
-typedef TGpio<PORT_E, PIN_1> Pin_TXD_t;   //PD1 (TXD) - TXD [wakeport]
-typedef TGpio<PORT_D, PIN_2> Pin_PD2_t;   //PD2 - not used [control]
-typedef TGpio<PORT_D, PIN_3> Pin_Spd1_t;  //PD3 - Speed 1 [control]
-typedef TGpio<PORT_D, PIN_4> Pin_Spd2_t;  //PD4 - Speed 2 [control]
-typedef TGpio<PORT_D, PIN_5> Pin_Sleep_t; //PD5 - Sleep [control]
-typedef TGpio<PORT_D, PIN_6> Pin_PD6_t;   //PD6 - not used [control]
-typedef TGpio<PORT_D, PIN_7> Pin_PD7_t;   //PD7 - not used [control]
+typedef TGpio<PORT_B, PIN_0> Pin_Tacho_t; //PB0 (ICP0) - Tacho in [control]
+typedef TGpio<PORT_D, PIN_3> Pin_Pwm_t;   //PB3 (OC2B) - PWM out [pwm]
+typedef TGpio<PORT_C, PIN_2> Pin_Zcd_t;   //PC2 - Zero Crossing Detector
+
+typedef TGpio<PORT_D, PIN_0> Pin_RXD_t;   //PD0 (RXD) - RXD [wakeport]
+typedef TGpio<PORT_D, PIN_1> Pin_TXD_t;   //PD1 (TXD) - TXD [wakeport]
+
+typedef TGpio<PORT_D, PIN_4> Pin_Lock_t;  //PD4 - Lock out [control] NOT USED
+typedef TGpio<PORT_D, PIN_5> Pin_Sleep_t; //PD5 - Sleep [control] NOT USED
+//typedef TGpio<PORT_D, PIN_6> Pin_Spd2_t;  //PD6 - Speed 2 [control], FWD/REV
 
 //-------------- Использование аппаратных блоков процессора: -----------------
 

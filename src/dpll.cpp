@@ -103,12 +103,15 @@
 TDpll::TDpll(void)
 {
   Pin_Tacho.DirIn(PIN_PULL);
+  Pin_Relay.DirOut();
+  Pin_Fref.DirOut();
+
   Pwm = new TPwm();
   //timer 1 mode: CTC, TOP = OCR1A, CK/1:
-  TCCR4B = (1 << WGM42) | (1 << CS40);
+  TCCR1B = (1 << WGM12) | (1 << CS10);
   //IC1 and OC1A interrupts enable:
-  TIFR4 = (1 << ICF4) | (1 << OCF4A);
-  TIMSK4 |= (1 << ICIE4) | (1 << OCIE4A);
+  TIFR1 = (1 << ICF1) | (1 << OCF1A);
+  TIMSK1 |= (1 << ICIE1) | (1 << OCIE1A);
   SetSpeed(NOM_V[PRE2]);
 
   vCapV = 0; preCapV = 0;
@@ -141,11 +144,11 @@ uint8_t  TDpll::vOvfC;
 uint16_t TDpll::HPeriod;
 int8_t   TDpll::vPfdState;
 
-#pragma vector = TIMER4_CAPT_vect
+#pragma vector = TIMER1_CAPT_vect
 __interrupt void Capture(void)
 {
   //сохранение захваченного значения фазы:
-  TDpll::vCapV = ICR4;
+  TDpll::vCapV = ICR1;
   //обновление состояния фазового детектора:
   TDpll::vPfdState++;
   //счет событий захвата таймера:
@@ -153,7 +156,7 @@ __interrupt void Capture(void)
   //сохранение количества переполнений таймера:
   TDpll::vOvfN = TDpll::vOvfC;
   //коррекция, если переполнение было до захвата таймера:
-  if((HI(TDpll::vCapV) < HI(TDpll::HPeriod)) && (TIFR4 & (1 << OCF4A)))
+  if((HI(TDpll::vCapV) < HI(TDpll::HPeriod)) && (TIFR1 & (1 << OCF1A)))
     TDpll::vOvfN++;
 }
 
@@ -162,15 +165,15 @@ __interrupt void Capture(void)
 uint16_t TDpll::vPhase;
 bool TDpll::vPfdUpd;
 
-#pragma vector = TIMER4_COMPA_vect
+#pragma vector = TIMER1_COMPA_vect
 __interrupt void Compare(void)
 {
   //счет переполнений таймера:
-  TDpll::vOvfC++;
+  TDpll::Pin_Fref = (TDpll::vOvfC++)&1;
   //вычисление ошибки фазы:
   TDpll::vPfdState--;
   if(TDpll::vPfdState == 0) TDpll::vPhase = TDpll::vCapV;
-    else if(TDpll::vPfdState < 0) { TDpll::vPhase = OCR4A; TDpll::vPfdState = -1; }
+    else if(TDpll::vPfdState < 0) { TDpll::vPhase = OCR1A; TDpll::vPfdState = -1; }
       else { TDpll::vPhase = 0; TDpll::vPfdState = 1; }
   TDpll::vPfdUpd = 1;
 }
@@ -274,9 +277,14 @@ uint16_t TDpll::Pid(uint16_t inp)
   //учет интегральной составляющей:
   int32_t err = NOM_PFD - inp;
   Y = Y + (int32_t)K.i * err * HI(Period) / 256;
-  //учет дифференциальной составляющей:
-  int32_t div2 = (int32_t)inp - 2 * (int32_t)Xp + Xpp;
-  Y = Y - (int32_t)K.d * div2 * 32768 / HI(Period);
+
+  if((Y>0)&&(Y<MAX_PFD*512)) // при ограничении D отключается
+  {
+      //учет дифференциальной составляющей:
+      int32_t div2 = (int32_t)inp - 2 * (int32_t)Xp + (int32_t)Xpp;
+      Y = Y - (int32_t)K.d * div2 * 32768 / HI(Period);
+  }
+
   //ограничение выходного значения:
   if(Y < 0) Y = 0;
   if(Y > (MAX_PFD * 512)) Y = (MAX_PFD * 512);
@@ -314,7 +322,7 @@ void TDpll::SetSpeed(uint16_t speed)
   Period = F_CLK * 10 / speed;
   Speed = speed;
   HPeriod = Period / 2;
-  OCR4A = Period - 1;
+  OCR1A = Period - 1;
 }
 
 //-------------------------- Чтение скорости: --------------------------------
@@ -343,6 +351,11 @@ uint16_t TDpll::GetPhase(void)
 void TDpll::SetDir(uint8_t dir)
 {
   Dir = dir;
+  if(dir == DIRF) {
+    Pin_Relay = 0;
+  } else if (dir == DIRR) {
+    Pin_Relay = 1;
+  }
   //Motor->SetDir(dir);
 }
 

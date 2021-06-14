@@ -54,7 +54,7 @@ inline void TControl::HardwareInit(void)
 {
   //настройка пинов:
   Pin_Spd1.DirIn(PIN_PULL);
-  Pin_Spd2.DirIn(PIN_PULL);
+  Pin_Dir.DirIn(PIN_PULL);
   Pin_Sleep.DirIn(PIN_PULL);
   Pin_Lock.DirOut();
   Pin_Led.DirOut();
@@ -101,9 +101,8 @@ inline void TControl::ControlService(void)
     uint8_t m = 0;
     //чтение сигналов управления:
     if(Pin_Sleep) m |= MRUN;
-    //if(Pin_Dir)   m |= MDIR;
+    if(!Pin_Dir)  m |= MDIR;
     if(Pin_Spd1)  m |= MPRS0;
-    if(Pin_Spd2)  m |= MPRS1;
     //если сигналы изменились, то изменение режима:
     if(PinMode != m)
     {

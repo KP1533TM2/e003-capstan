@@ -24,9 +24,9 @@ typedef struct
 //------------------------------ Класс TDpll: --------------------------------
 //----------------------------------------------------------------------------
 
-#pragma vector = TIMER4_CAPT_vect
+#pragma vector = TIMER1_CAPT_vect
 extern "C" __interrupt void Capture(void);
-#pragma vector = TIMER4_COMPA_vect
+#pragma vector = TIMER1_COMPA_vect
 extern "C" __interrupt void Compare(void);
 
 class TDpll
@@ -37,6 +37,8 @@ class TDpll
 private:
   TPwm *Pwm;
   Pin_Tacho_t Pin_Tacho;
+  Pin_Relay_t Pin_Relay;
+  static Pin_Fref_t Pin_Fref;
   static uint16_t vCapV;    //захваченное значение
   static uint8_t  vCapN;    //количество входных импульсов
   static uint8_t  vOvfN;    //количество переполнений таймера
@@ -71,8 +73,8 @@ private:
   static const uint32_t MIN_PFD = 0;              //минимальный код фазы
   TSoftTimer *MeterTimer;   //таймер измерения частоты
   static const uint16_t METER_TM = 20; //интервал измерения частоты
-  static const uint8_t NOM_KP = 20; //значение Kp по умолчанию
-  static const uint8_t NOM_KI = 20; //значение Ki по умолчанию
+  static const uint8_t NOM_KP = 8; //значение Kp по умолчанию
+  static const uint8_t NOM_KI = 4; //значение Ki по умолчанию
   static const uint8_t NOM_KD = 50; //значение Kd по умолчанию
 public:
   TDpll(void);

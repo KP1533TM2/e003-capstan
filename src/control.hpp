@@ -42,9 +42,9 @@ class TControl
   friend class TPort;
 private:
   Pin_Spd1_t Pin_Spd1;
-  Pin_Spd2_t Pin_Spd2;
   Pin_Sleep_t Pin_Sleep;
   Pin_Lock_t Pin_Lock;
+  Pin_Dir_t Pin_Dir;
   Pin_Led_t Pin_Led;
 
   TDpll *Dpll;

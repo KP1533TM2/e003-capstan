@@ -13,9 +13,9 @@
 //--------------------------- Класс TWakePort --------------------------------
 //----------------------------------------------------------------------------
 
-#pragma vector = USART0_RX_vect
+#pragma vector = USART_RX_vect
 extern "C" __interrupt void Rx_Int(void); //прерывание после приема байта
-#pragma vector = USART0_TX_vect
+#pragma vector = USART_TX_vect
 extern "C" __interrupt void Tx_Int(void); //прерывание после передачи байта
 
 class TWakePort : public TWake

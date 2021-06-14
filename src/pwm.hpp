@@ -18,12 +18,15 @@ class TPwm
 {
 private:
   friend __interrupt void SigmaDelta(void);
-  Pin_Pwm_t Pin_Pwm;
+  static Pin_Pwm_t Pin_Pwm;
+  static Pin_Zcd_t Pin_Zcd;
+  static Pin_Debug_t Pin_Debug;
   static uint16_t const PWM_MAX  = 0xFF00;
   static uint16_t const PWM_MASK = 0xFFFC; //limit to 14 bit
   static uint8_t Pwm_Lo;
   static uint8_t Pwm_iHi;
   static uint8_t Pwm_iHi_plus_1;
+  static uint16_t Raw_V;
 public:
   TPwm(void);
   void Set(uint16_t v); //задание PWM
