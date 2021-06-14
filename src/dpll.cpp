@@ -193,8 +193,17 @@ __monitor void TDpll::AtomicReadCompare(void)
 
 //------------------------ Выполнение регулирования: -------------------------
 
+#define MOV_AVG_SIZE 8 
+#define MOV_AVG_SIZE_MASK 0x07
+#define MOV_AVG_SIZE_SHIFT 3
+
 void TDpll::Execute(void)
 {
+  // Переменные для скользящего усреднения
+  static uint16_t Phase_Arr[MOV_AVG_SIZE] = {0};
+  static uint32_t Phase_Avg = 0;
+  static uint8_t Phase_Ptr = 0;
+
   //Измерение частоты сигнала таходатчика:
   if(MeterTimer->Over())
   {
@@ -223,7 +232,15 @@ void TDpll::Execute(void)
     vPfdUpd = 0; //сброс флага обновления
     AtomicReadCompare(); //атомарное чтение фазы
     //приведение кода фазы к диапазону 0..MAX_PFD:
+
     Phase = ~((uint16_t)((uint32_t)Phase * MAX_PFD / (Period - 1)));
+    Phase_Avg -= Phase_Arr[Phase_Ptr];
+    Phase_Avg += Phase;
+    Phase_Arr[Phase_Ptr++] = Phase;
+    Phase_Ptr &= MOV_AVG_SIZE_MASK;
+
+    Phase = Phase_Avg>>MOV_AVG_SIZE_SHIFT;
+
     //регулировка скорости двигателя:
     if(Enable) //если разрешено автоматическое регулирование
     {
