@@ -121,7 +121,8 @@ TDpll::TDpll(void)
   vPfdUpd = 0;
   vPfdState = 0;
   Lock = 0;
-
+  Brake = 0;
+  
   SetDir(DIRS);
   Enable = 1;
   Yp = 0;
@@ -133,6 +134,7 @@ TDpll::TDpll(void)
   MeterTimer->Start();
   LockTimer = new TSoftTimer(LOCK_TM);
   LockTimer->Start();
+  BrakeTimer = new TSoftTimer(BRAKE_OFF_DELAY);
 }
 
 //------------------------- Прерывание по захвату: ---------------------------
@@ -228,12 +230,25 @@ void TDpll::Execute(void)
     preCapV = CapV;
     preCapN = CapN;
     preOvfN = OvfN;
+
   }
+
+  if(Dir != DIRS) {
+    Pin_Relay = (Brake?1:0) ^ ((Dir==DIRR)?1:0);
+    if(BrakeTimer->Over()) {
+      if(Tacho < Speed + BRAKE_OFF_DELAY) Brake = 0; 
+    }
+  } else {
+    Brake = 0;
+    BrakeTimer->Stop();
+  }
+
   //Реализация DPLL:
   if(vPfdUpd) //если значение фазы обновилось
   {
     vPfdUpd = 0; //сброс флага обновления
     AtomicReadCompare(); //атомарное чтение фазы
+
     //приведение кода фазы к диапазону 0..MAX_PFD:
 
     Phase = ~((uint16_t)((uint32_t)Phase * MAX_PFD / (Period - 1)));
@@ -248,8 +263,9 @@ void TDpll::Execute(void)
     if(Enable) //если разрешено автоматическое регулирование
     {
       if(Dir != DIRS)         //если не режим STOP
-        Pwm->Set(Pid(Phase)); //вычисление PID и загрузка PWM
-          else Pwm->Set(0);   //режим STOP, выключение двигателя
+        Pwm->Set(Pid(Brake?0:Phase)); //вычисление PID и загрузка PWM        
+      else
+        Pwm->Set(0);   //режим STOP, выключение двигателя
     }
     uint8_t ph = HI(Phase);
     if(ph < PH_MIN || ph > PH_MAX)
@@ -320,6 +336,11 @@ void TDpll::SetSpeed(uint16_t speed)
   if(speed > MAX_V[PRE3]) speed = MAX_V[PRE3];
   if(speed < MIN_V[PRE0]) speed = MIN_V[PRE0];
   Period = F_CLK * 10 / speed;
+  // Если текущая скорость выше выбираемой на заданный порог, включим тормоз
+  if(Speed > speed + BRAKE_ON_THRESHOLD) {
+    Brake = 1;
+    BrakeTimer->Start();
+  }
   Speed = speed;
   HPeriod = Period / 2;
   OCR1A = Period - 1;
@@ -351,12 +372,11 @@ uint16_t TDpll::GetPhase(void)
 void TDpll::SetDir(uint8_t dir)
 {
   Dir = dir;
-  if(dir == DIRF) {
+/*  if(dir == DIRF) {
     Pin_Relay = 0;
   } else if (dir == DIRR) {
     Pin_Relay = 1;
-  }
-  //Motor->SetDir(dir);
+  }*/
 }
 
 //------------------------- Чтение захвата частоты: --------------------------

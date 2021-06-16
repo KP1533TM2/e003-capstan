@@ -54,7 +54,17 @@ private:
   uint16_t Phase;           //текущее значение фазы
   static bool vPfdUpd;      //флаг обновления значения фазы
   TSoftTimer *LockTimer;    //таймер детектора захвата
-  static const uint16_t LOCK_TM = 100; //время определения захвата
+  TSoftTimer *BrakeTimer;   //таймер задержки отключения тормоза
+
+  // Разница в скоростях для включения тормоза реле, x 0.1 Hz
+  static const uint16_t BRAKE_ON_THRESHOLD = 750;
+
+  // Разница в скоростях для отключения тормоза реле, x 0.1 Hz
+  static const uint16_t BRAKE_OFF_THRESHOLD = 500;
+  
+  static const uint8_t BRAKE_OFF_DELAY = 100;
+  
+  static const uint16_t LOCK_TM = 500; //время определения захвата
   static const uint16_t PH_ERR = 120; //допустимое отклонение фазы, градусов
   static const uint8_t PH_MIN = UINT8_MAX / 2 - UINT8_MAX * PH_ERR / 360;
   static const uint8_t PH_MAX = UINT8_MAX / 2 + UINT8_MAX * PH_ERR / 360;
@@ -62,6 +72,7 @@ private:
   uint16_t Speed;           //заданная скорость, x 0.1 Hz
   uint16_t Tacho;           //частота тахогенератора, x 0.1 Hz
   uint16_t Period;          //период опорной частоты
+  uint8_t Brake;            //Торможение реле
   uint8_t Dir;              //текущее направление вращения
   kpid_t K;                 //коэффициенты PID
   uint16_t Xp;              //PID inp(n-1)
