@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name k504nt)(type Legacy)(uri ${KIPRJMOD}/k504nt.lib)(options "")(descr ""))
+  (lib (name adm485)(type Legacy)(uri ${KIPRJMOD}/adm485.lib)(options "")(descr ""))
+)

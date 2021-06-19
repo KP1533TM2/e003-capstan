@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP К504НТ3А
+D P-JFET transistor, drain/source/gate
+K transistor PJFET P-JFET
+F ~
+$ENDCMP
+#
+#End Doc Library
