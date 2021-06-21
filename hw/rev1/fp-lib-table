@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name pot_universal)(type KiCad)(uri ${KIPRJMOD}/pot_universal.pretty)(options "")(descr ""))
+  (lib (name to220)(type KiCad)(uri ${KIPRJMOD}/to220.pretty)(options "")(descr ""))
+  (lib (name kk_369_right_angle)(type KiCad)(uri ${KIPRJMOD}/kk_369_right_angle.pretty)(options "")(descr ""))
+)

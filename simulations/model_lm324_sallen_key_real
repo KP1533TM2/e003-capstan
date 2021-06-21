@@ -1,0 +1,42 @@
+.title LM324 PWM filter
+.param Fpwm=62500
+.param res=256
+
+*set ngbehavior=psa
+
+.include ./libs/LM324.ti.lib
+
+* abs(sine) ideal reference
+b2 10 0 V=(abs(sin(time*pi*50*2)))*5
+
+* abs(sine) ideal pwm
+b1 1 0 V=(((time*Fpwm-floor(time*Fpwm))*256)<floor((abs(sin(floor(time*Fpwm)/Fpwm*pi*50*2)))*256))*5
+
+vp 100 0 dc 15
+vn 200 0 dc -15
+
+* LM324: Xn pinp ninp vp vn out LM324
+
+x1 5 110 100 200 110 LM324
+r20 105 106 1k
+r21 105 0 1k
+
+*vin 1 0 dc 0 ac 1
+
+r1 1 2 8.2k
+c1 2 0 15n
+r2 2 3 27k
+c2 3 110 15n
+r3 3 5 27k
+c3 5 0 100p
+
+.tran 31250p 15ms
+
+.control
+run
+plot v(10) v(110)
+
+.endc
+.end
+
+
