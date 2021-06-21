@@ -658,9 +658,7 @@ F 3 "~" H 8350 1700 50  0001 C CNN
 	0    1    -1   0   
 $EndComp
 Wire Wire Line
-	8500 1500 8750 1500
-Wire Wire Line
-	8500 1700 9050 1700
+	8500 1700 8750 1700
 $Comp
 L Device:Jumper TP1
 U 1 1 61126A46
@@ -864,11 +862,6 @@ Wire Wire Line
 Connection ~ 8950 1600
 Wire Wire Line
 	9050 1050 8750 1050
-Wire Wire Line
-	8750 1050 8750 1500
-Connection ~ 8750 1500
-Wire Wire Line
-	8750 1500 9050 1500
 $Sheet
 S 3250 3200 850  300 
 U 61F382E3
@@ -877,6 +870,7 @@ F1 "analog.sch" 50
 F2 "Tacho" O R 4100 3300 50 
 F3 "PWM" I L 3250 3400 50 
 F4 "Reverse" I L 3250 3300 50 
+F5 "ZCD" O R 4100 3400 50 
 $EndSheet
 Wire Wire Line
 	4400 1400 4400 3300
@@ -1118,4 +1112,21 @@ F 3 "" H 10800 6150 50  0001 C CNN
 	1    10800 6150
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	2650 2500 3250 2500
+Wire Wire Line
+	3250 2500 3250 3000
+Wire Wire Line
+	3250 3000 4300 3000
+Wire Wire Line
+	4300 3000 4300 3400
+Wire Wire Line
+	4300 3400 4100 3400
+Connection ~ 8750 1700
+Wire Wire Line
+	8750 1700 9050 1700
+Wire Wire Line
+	8500 1500 9050 1500
+Wire Wire Line
+	8750 1050 8750 1700
 $EndSCHEMATC
